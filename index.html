@@ -1,178 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tebakan Romantis</title>
-<style>
-    /* Style dasar */
-    body {
-        background-color: #ffdae0;
-        color: #333;
-        font-family: Arial, sans-serif;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        margin: 0;
-    }
-
-    .container {
-        text-align: center;
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
-        position: relative;
-        z-index: 10;
-    }
-
-    h1 {
-        font-size: 1.8em;
-        color: #ff5c8a;
-        animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-    }
-
-    .options {
-        margin-top: 20px;
-    }
-
-    button {
-        padding: 10px 20px;
-        font-size: 1em;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin: 5px;
-        transition: background 0.3s, transform 0.2s;
-    }
-
-    button:hover {
-        transform: scale(1.1);
-    }
-
-    .btn-a {
-        background-color: #ff5c8a;
-    }
-
-    .btn-b {
-        background-color: #8c8c8c;
-    }
-
-    /* Floating flowers & hearts */
-    .floating-element {
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        opacity: 0.8;
-        animation: float 10s linear infinite;
-        pointer-events: none;
-    }
-
-    .flower {
-        background-color: pink;
-        border-radius: 50%;
-        box-shadow: 10px 0px pink, -10px 0px pink, 0px 10px pink, 0px -10px pink;
-    }
-
-    .heart {
-        background-color: red;
-        width: 20px;
-        height: 20px;
-        transform: rotate(-45deg);
-        top: 50%;
-        left: 50%;
-        margin: -10px 0 0 -10px;
-    }
-
-    .heart:before,
-    .heart:after {
-        content: "";
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        background: red;
-        border-radius: 50%;
-    }
-
-    .heart:before {
-        top: -10px;
-        left: 0;
-    }
-
-    .heart:after {
-        left: 10px;
-        top: 0;
-    }
-
-    @keyframes float {
-        from {
-            transform: translateY(100vh) rotate(0deg);
-            opacity: 1;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tebak-Tebakan Romantis</title>
+    <style>
+        body {
+            background-color: #ffe6f1;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            flex-direction: column;
         }
-        to {
-            transform: translateY(-100vh) rotate(360deg);
+
+        .container {
+            text-align: center;
+            border: 2px solid #ff66b3;
+            border-radius: 15px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .title {
+            color: #ff3366;
+        }
+
+        .question {
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+
+        .options {
+            margin: 20px 0;
+        }
+
+        .option {
+            background-color: #ff66b3;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s, transform 0.1s;
+            width: 100%;
+        }
+
+        .option:hover {
+            background-color: #ff3366;
+        }
+
+        .option:active {
+            transform: scale(0.95);
+        }
+
+        .option.b {
+            background-color: #555;
+            color: white;
+        }
+
+        .option.b:hover {
+            background-color: #777;
+        }
+
+        .output {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #ffffff;
+            padding: 10px;
+            border: 2px solid #ff66b3;
+            border-radius: 10px;
+            background-color: #ff66b3;
+            box-shadow: 0 0 20px rgba(255, 102, 178, 0.5);
+            animation: glow 1.5s infinite alternate;
             opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
-    }
 
-    /* Response style */
-    #response {
-        font-size: 1.4em;
-        color: #ff5c8a;
-        margin-top: 20px;
-        animation: fadeIn 1s;
-    }
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px rgba(255, 102, 178, 0.7);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(255, 102, 178, 1);
+            }
+        }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-</style>
+        .floating-element {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            opacity: 0.8;
+            animation: float 10s linear infinite;
+            pointer-events: none;
+        }
+
+        .flower {
+            background-color: pink;
+            border-radius: 50%;
+            box-shadow: 10px 0px pink, -10px 0px pink, 0px 10px pink, 0px -10px pink;
+        }
+
+        .heart {
+            background-color: red;
+            width: 20px;
+            height: 20px;
+            transform: rotate(-45deg);
+            position: relative;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+        }
+
+        .heart:before,
+        .heart:after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: red;
+            border-radius: 50%;
+        }
+
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart:after {
+            left: 10px;
+            top: 0;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        #response {
+            font-size: 1.4em;
+            color: #ff5c8a;
+            margin-top: 20px;
+            animation: fadeIn 1s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Harimau, kalo rimau-nya dihilangin jadi apa hayoo?</h1>
-    <div class="options">
-        <button class="btn-a" onclick="showAnswer('a')">Apaa tuu?</button>
-        <button class="btn-b" onclick="showAnswer('b')">Ga mau tau, cape</button>
+    <div class="container">
+        <h1 class="title">Untuk mu :)</h1>
+        <p class="question">Uang kalo "ang" nya dihilangin jadi apaan?</p>
+        <div class="options">
+            <button class="option" onclick="selectOption('a')">Ga tau nyerah, apaan?</button>
+            <button class="option b" onclick="selectOption('b')">Males, gapeduli juga</button>
+        </div>
+        <div id="output" class="output"></div>
+        <audio id="audio" src="audio.mp3"></audio>
     </div>
-    <div id="response"></div>
-</div>
 
-<!-- Floating objects -->
-<script>
-    function createFloatingObject(type) {
-        const object = document.createElement('div');
-        object.classList.add('floating-element', type);
-        object.style.left = Math.random() * 100 + 'vw';
-        object.style.animationDuration = (Math.random() * 5 + 5) + 's';
-        document.body.appendChild(object);
-    }
-
-    // Create floating flowers and hearts
-    for (let i = 0; i < 20; i++) {
-        createFloatingObject('flower');
-        createFloatingObject('heart');
-    }
-
-    function showAnswer(option) {
-        const response = document.getElementById("response");
-        if (option === 'a') {
-            response.innerHTML = "Haholongakku do ho saleleng au mangolu, Nang ro di dinalao mate pe";
-        } else {
-            response.innerHTML = "Dah lah, >:(";
+    <script>
+        function createFloatingObject(type) {
+            const object = document.createElement('div');
+            object.classList.add('floating-element', type);
+            object.style.left = Math.random() * 100 + 'vw';
+            object.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            document.body.appendChild(object);
         }
-    }
-</script>
 
+        for (let i = 0; i < 20; i++) {
+            createFloatingObject('flower');
+            createFloatingObject('heart');
+        }
+
+        function selectOption(option) {
+            const output = document.getElementById("output");
+            const audio = document.getElementById("audio");
+            output.style.opacity = 0;
+            output.style.transform = "translateY(20px)";
+
+            if (option === 'a') {
+                output.textContent = "Unang sai sukkuni be i, Boha bagas ni holongki tu ho, Tung saribu ro si boru na uli, Anggo rohakku hot do i tu ho. (Jangan katakan lagi Seberapa dalam cintaku kepadamu Walaupun seribu wanita yang cantik Hatiku tetap kepadamu)";
+                output.style.backgroundColor = "#ff66b3";
+                output.style.borderColor = "#ff66b3";
+                output.style.boxShadow = "0 0 20px rgba(255, 102, 178, 0.5)";
+                audio.play();
+            } else if (option === 'b') {
+                output.textContent = "Dahlah bubar aja.";
+                output.style.backgroundColor = "#000000";
+                output.style.borderColor = "#333333";
+                output.style.boxShadow = "0 0 5px rgba(51, 51, 51, 0.5)";
+            }
+
+            setTimeout(() => {
+                output.style.opacity = 1;
+                output.style.transform = "translateY(0)";
+            }, 100);
+        }
+    </script>
 </body>
 </html>
