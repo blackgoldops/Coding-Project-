@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Toko</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        header, footer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        .riwayat {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 id="namaToko">Manajemen Toko</h1>
+    </header>
+    <div class="container">
+        <label for="inputNamaToko">Nama Toko:</label>
+        <input type="text" id="inputNamaToko" placeholder="Masukkan nama toko">
+        <button onclick="ubahNamaToko()">Update Nama Toko</button>
+
+        <h2>Stok Barang</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nama Barang</th>
+                    <th>Harga Beli (Rp)</th>
+                    <th>Harga Jual (Rp)</th>
+                    <th>Stok</th>
+                    <th>Opsi</th>
+                </tr>
+            </thead>
+            <tbody id="daftarBarang"></tbody>
+        </table>
+        <h3>Tambahkan Barang Baru</h3>
+        <input type="text" id="namaBarang" placeholder="Nama barang">
+        <input type="number" id="hargaBeli" placeholder="Harga beli (Rp)">
+        <input type="number" id="hargaJual" placeholder="Harga jual (Rp)">
+        <input type="number" id="stokBarang" placeholder="Jumlah stok">
+        <button onclick="tambahBarang()">Tambahkan Barang</button>
+
+        <div class="riwayat">
+            <h2>Riwayat Penjualan</h2>
+            <ul id="riwayatPenjualan"></ul>
+        </div>
+
+        <h3>Keuntungan Toko: Rp <span id="keuntungan">0</span></h3>
+    </div>
+    <footer>&copy; Code Written By: Abell</footer>
+
+    <script>
+        let barang = JSON.parse(localStorage.getItem('barang')) || [];
+        let keuntungan = parseFloat(localStorage.getItem('keuntungan')) || 0;
+
+        function ubahNamaToko() {
+            const nama = document.getElementById('inputNamaToko').value;
+            document.getElementById('namaToko').textContent = nama || 'Manajemen Toko';
+        }
+
+        function tambahBarang() {
+            const nama = document.getElementById('namaBarang').value;
+            const hargaBeli = parseFloat(document.getElementById('hargaBeli').value);
+            const hargaJual = parseFloat(document.getElementById('hargaJual').value);
+            const stok = parseInt(document.getElementById('stokBarang').value);
+            if (nama && !isNaN(hargaBeli) && !isNaN(hargaJual) && !isNaN(stok)) {
+                barang.push({ nama, hargaBeli, hargaJual, stok });
+                localStorage.setItem('barang', JSON.stringify(barang));
+                tampilkanBarang();
+                document.getElementById('namaBarang').value = '';
+                document.getElementById('hargaBeli').value = '';
+                document.getElementById('hargaJual').value = '';
+                document.getElementById('stokBarang').value = '';
+            }
+        }
+
+        function hapusBarang(indeks) {
+            barang.splice(indeks, 1);
+            localStorage.setItem('barang', JSON.stringify(barang));
+            tampilkanBarang();
+        }
+
+        function ubahBarang(indeks) {
+            const stokBaru = parseInt(prompt('Masukkan stok baru:', barang[indeks].stok));
+            const hargaJualBaru = parseFloat(prompt('Masukkan harga jual baru:', barang[indeks].hargaJual));
+            if (!isNaN(stokBaru) && stokBaru >= 0 && !isNaN(hargaJualBaru) && hargaJualBaru >= 0) {
+                barang[indeks].stok = stokBaru;
+                barang[indeks].hargaJual = hargaJualBaru;
+                localStorage.setItem('barang', JSON.stringify(barang));
+                tampilkanBarang();
+                alert('Data barang berhasil diubah.');
+            } else {
+                alert('Input tidak valid!');
+            }
+        }
+
+        function jualBarang(indeks) {
+            const jumlah = parseInt(prompt('Masukkan jumlah yang terjual:', 0));
+            if (!isNaN(jumlah) && jumlah > 0 && barang[indeks].stok >= jumlah) {
+                const pendapatan = barang[indeks].hargaJual * jumlah;
+                const biaya = barang[indeks].hargaBeli * jumlah;
+                const laba = pendapatan - biaya;
+                barang[indeks].stok -= jumlah;
+                keuntungan += laba;
+                localStorage.setItem('barang', JSON.stringify(barang));
+                localStorage.setItem('keuntungan', keuntungan);
+                tambahKeRiwayat(barang[indeks].nama, jumlah, laba);
+                tampilkanBarang();
+            } else {
+                alert('Jumlah tidak valid atau stok tidak cukup!');
+            }
+        }
+
+        function tambahKeRiwayat(nama, jumlah, laba) {
+            const riwayat = document.getElementById('riwayatPenjualan');
+            const elemen = document.createElement('li');
+            elemen.textContent = `${jumlah}x ${nama} terjual dengan keuntungan Rp ${laba}`;
+            riwayat.appendChild(elemen);
+        }
+
+        function tampilkanBarang() {
+            const daftarBarang = document.getElementById('daftarBarang');
+            daftarBarang.innerHTML = '';
+            barang.forEach((item, indeks) => {
+                daftarBarang.innerHTML += `
+                    <tr>
+                        <td>${item.nama}</td>
+                        <td>Rp ${item.hargaBeli}</td>
+                        <td>Rp ${item.hargaJual}</td>
+                        <td>${item.stok}</td>
+                        <td>
+                            <button onclick="ubahBarang(${indeks})">Ubah</button>
+                            <button onclick="jualBarang(${indeks})">Jual</button>
+                            <button onclick="hapusBarang(${indeks})">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('keuntungan').textContent = keuntungan.toFixed(2);
+        }
+
+        tampilkanBarang();
+    </script>
+</body>
+</html>
